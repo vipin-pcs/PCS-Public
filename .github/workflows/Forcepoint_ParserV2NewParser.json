@@ -1,0 +1,83 @@
+{
+	"parser_name": "Forcepoint_ParserV2NewParser",
+	"parser_data": {
+		"field_extraction": {
+			"extract_TS": {
+				"default_tz": "GMT",
+				"time_stamp": "Column 1"
+			},
+			"extract_fields": {
+				"field_mapping": {
+					"fields": {
+						"action": [
+							"Action"
+						],
+						"url": [
+							"URL"
+						],
+						"user": [
+							"User"
+						]
+					},
+					"action": "Column 9",
+					"server_bytes": "Column 8",
+					"client_bytes": "Column 7",
+					"dstip": "Column 5",
+					"srcip": "Column 4",
+					"url": "Column 2",
+					"user": "Column 3",
+					"port": "Column 6"
+				}
+			},
+			"structured_tokenize": {
+				"enclosure": "double quotes",
+				"field_delimiter": "comma"
+			}
+		},
+		"log_preparation": {
+			"identify_header": {
+				"header_delimiter": "comma",
+				"header_present": "false",
+				"header_starts_at_line": "1",
+				"logformat": "hybrid",
+				"use_header": [
+					"\ufeffDate",
+					"URL",
+					"User",
+					"Source IP",
+					"Destination IP",
+					"Action",
+					"Bytes_Sent",
+					"Bytes_Received",
+					"Port"
+				]
+			},
+			"multiline_merge": {
+				"logline_delimiter_match": "",
+				"logline_delimiter_size": "",
+				"multiline_delimiter": ""
+			},
+			"pre_filter": {
+				"pick_line_patterns": "80|http|443|https"
+			}
+		},
+		"transformation": {
+			"addorchange": [
+				{
+					"match": [
+						{
+							"field": "action",
+							"operator": "contains",
+							"value": "Permitted"
+						}
+					],
+					"target_field": "action",
+					"to_val_type": "freeform",
+					"to_val": "Allow",
+					"default": "",
+					"rule_name": "Action Mapping"
+				}
+			]
+		}
+	}
+}
